@@ -21,7 +21,7 @@ public class GeneradorDeImagenes {
 			guardar(gradienteRadial(), "img2/2_gradiente_radial.png");
 			guardar(tablero(), "img2/3_tablero.png");
 			guardar(anillosConcentricos(), "img2/4_anillos.png");
-			guardar(ondasPlasma(), "img2/5_ondas_plasma.png");
+			guardar(anillosConcentricos2(), "img2/5_anillos_2.png");
  
 			System.out.println("Las 5 imagenes se generaron con exito");
 		} catch (IOException e) {
@@ -126,28 +126,29 @@ public class GeneradorDeImagenes {
 		return img;
 	}
  
-	//IMAGEN5: ondas tipo "plasma"
-	// Se suman funciones seno en x, en y y en la distancia al centro,
-	// y el resultado se usa para generar cada canal con un desfase distinto.
-	static BufferedImage ondasPlasma() {
-		BufferedImage img = nuevaImagen();
-		double cx = ANCHO / 2.0;
-		double cy = ALTO / 2.0;
- 
-		for (int x = 0; x < ANCHO; x++) {
-			for (int y = 0; y < ALTO; y++) {
-				double dist = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
-				double v = Math.sin(x / 40.0) + Math.sin(y / 30.0) + Math.sin(dist / 25.0);
-				// v esta entre -3 y 3; lo normalizamos a 0-1
-				double t = (v + 3) / 6.0;
- 
-				int r = (int) (255 * Math.sin(Math.PI * t));
-				int g = (int) (255 * Math.sin(Math.PI * t + 2.0) * 0.5 + 127);
-				int b = (int) (255 * (1 - t));
-				img.setRGB(x, y, crearPixel(r, g, b));
+	//IMAGEN5: anillos concentricos
+		static BufferedImage anillosConcentricos2() {
+			BufferedImage img = nuevaImagen();
+			double cx = ANCHO / 2.0;
+			double cy = ALTO / 2.0;
+			int grosor = 20; // ancho de cada anillo
+	 
+			for (int x = 0; x < ANCHO; x++) {
+				for (int y = 0; y < ALTO; y++) {
+					double dist = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
+					int anillo = (int) (dist / grosor);
+					int pixel;
+					if (anillo % 3 == 0) {
+						pixel = crearPixel(220, 50, 50); // rojo
+					} else if (anillo % 3 == 1) {
+						pixel = crearPixel(1, 250, 0); // verde
+					} else {
+						pixel = crearPixel(40, 120, 220); // azul
+					}
+					img.setRGB(x, y, pixel);
+				}
 			}
+			return img;
 		}
-		return img;
-	}
-
+	 
 }
